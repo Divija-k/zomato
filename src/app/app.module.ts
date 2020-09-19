@@ -9,6 +9,7 @@ import { DetailsComponent } from './details/details.component';
 import { ErrorComponent } from './error/error.component';
 import {HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { RestaurantComponent } from './restaurant/restaurant.component';
 
 
 @NgModule({
@@ -16,18 +17,19 @@ import { FormsModule } from '@angular/forms';
     AppComponent,
     HomeComponent,
     DetailsComponent,
-    ErrorComponent
+    ErrorComponent,
+    RestaurantComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     RouterModule.forRoot([
       {path:'home', component:HomeComponent},
       {path:'',redirectTo:'home',pathMatch:'full'},
       {path:'details',component:DetailsComponent},
       {path:'**', component:ErrorComponent}
     ]),
-    HttpClientModule,
-    FormsModule
+    HttpClientModule
   ],
   providers: [LocationService],
   bootstrap: [AppComponent]

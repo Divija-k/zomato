@@ -10,13 +10,13 @@
       <h2 class="text-center mx-auto" >ENTER YOUR LOCATION DOWN HERE</h2>
   </div><br>
     <div class="row mx-auto" style="text-align: center;">
-        <div class="col-12">
-          <div class="form">
+        <div class="col-6 mx-auto">
+          <form #locationsearchform="ngForm" (ngSubmit)="getLocalDetails(user_location)">
             <div class="form-group">
-            <input type="search" class="form-control" id="exampleInputPassword1" placeholder="Enter your location">
+            <input type="text" class="form-control" placeholder="Enter your location" name="user_location" [(ngModel)]="user_location" required>
           </div>
-          <button type="submit" class="btn btn-danger">SEARCH</button>
-          </form>
+          <button type="submit" class="btn btn-danger" [disabled]="!locationsearchform.form.valid" [routerLink]="['/details']">SEARCH</button>
+        </form>
         </div>
       </div>
 <router-outlet></router-outlet>

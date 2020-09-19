@@ -1,63 +1,56 @@
-export interface allreviews{
-
-      rating: number,
-      review_text: string,
-      id: string,
-      rating_color: string,
-      review_time_friendly: string,
-      rating_text: string,
-      timestamp: string,
-      likes:number,
-      user: {
-        name: string,
-        zomato_handle: string,
-        foodie_level:  string,
-        foodie_level_num: number,
-        foodie_color: string,
-        profile_url:  string,
-        profile_deeplink:  string,
-        profile_image: string
-      },
-      comments_count: number
-     }
-export interface locationdetails{
+interface Location {
   address: string,
   locality: string,
   city: string,
+  city_id: number,
   latitude: string,
   longitude: string,
   zipcode: string,
-  country_id: string
+  country_id: number,
+  locality_verbose: string
 }
-export interface geocode {
-  location: {
-      entity_type: string,
-      entity_id: number,
-      title: string,
-      latitude: string,
-      longitude: string,
-      city_id: number,
-      city_name: string,
-      country_id: number,
-      country_name: string
-  },
+export interface nearby_restaurants{
   popularity: {
-      popularity: string,
-      nightlife_index: string,
-      nearby_res: Array<string>,
-      top_cuisines: Array<string>,
-      popularity_res: string,
-      nightlife_res: string,
-      subzone: string,
-      subzone_id: number,
-      city: string
-  },
+    popularity: string,
+    nightlife_index: string,
+    nearby_res: Array<string>,
+    top_cuisines: Array<string>,
+    popularity_res: string,
+    nightlife_res: string,
+    subzone: string,
+    subzone_id: number,
+    city: string
+},
+ location: locationDetails,
+ num_restaurant: number,
+ best_rated_restaurant : Array<RestaurantDetail>,
+ phone_numbers: string
 
-  link: string,
+}
+export interface locationDetails{
+    entity_type: string,
+    entity_id: number,
+    title: string,
+    latitude: string,
+    longitude: string,
+    city_id: number,
+    city_name: string,
+    country_id: number,
+    country_name: string
+}
 
-  nearby_restaurants: Array<Restaurantdetails>
-} 
-export interface Restaurantdetails {
+interface User_rating {
+  aggregate_rating: string,
+  rating_text: string,
+  rating_color: string,
+  votes: string
+}
+
+interface R {
+  res_id: number;
+}
+
+export interface RestaurantDetail {
   R: {
       res_id: number
   },
@@ -106,4 +99,63 @@ export interface Restaurantdetails {
   is_table_reservation_supported: number,
   has_table_booking: number,
   events_url: string
+}
+
+export interface LocalRes {
+
+  location: {
+      entity_type: string,
+      entity_id: number,
+      title: string,
+      latitude: string,
+      longitude: string,
+      city_id: number,
+      city_name: string,
+      country_id: number,
+      country_name: string
+  },
+  popularity: {
+      popularity: string,
+      nightlife_index: string,
+      nearby_res: Array<string>,
+      top_cuisines: Array<string>,
+      popularity_res: string,
+      nightlife_res: string,
+      subzone: string,
+      subzone_id: number,
+      city: string
+  },
+
+  link: string,
+
+  nearby_restaurants: Array<RestaurantDetail>
+}
+
+export interface Review {
+  rating: number,
+  review_text: string,
+  id: string,
+  rating_color: string,
+  review_time_friendly: string,
+  rating_text: string,
+  timestamp: 1537025922,
+  likes: number,
+  user: {
+      name: string,
+      foodie_level: string,
+      foodie_level_num: number,
+      foodie_color: string,
+      profile_url: string,
+      profile_image: string,
+      profile_deeplink: string
+  },
+  comments_count: number
+}
+
+export interface SubReview {
+  reviews_count: number,
+  reviews_start: number,
+  reviews_shown: number,
+  user_reviews: Array<Review>,
+  Respond_to_reviews_via_Zomato_Dashboard: string
 }
