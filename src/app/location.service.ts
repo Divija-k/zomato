@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
 import{ HttpClient, HttpHeaders} from '@angular/common/http';
 import { map} from 'rxjs/operators';
-import{LocalRes} from './Interfaces';
-import{ RestaurantDetail} from './Interfaces';
 import{Observable} from 'rxjs'
-import { locationDetails} from './Interfaces';
-import{nearby_restaurants} from './Interfaces'
-
+import{places} from './places';
 const  headers = new  HttpHeaders().set("user-key", "7e7c9bbe8aa2401689d95728e24352b8");
  
 @Injectable({
@@ -15,26 +11,51 @@ const  headers = new  HttpHeaders().set("user-key", "7e7c9bbe8aa2401689d95728e24
 export class LocationService {
 
 public mainUrl = 'https://developers.zomato.com/api/v2.1/';
-  
+cities = places;
   constructor(private _http: HttpClient) { 
    
   }
    getGeoCode(pos){
-    const geoCode= this._http.get<LocalRes>(`${this.mainUrl}geocode?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`, {headers}).pipe(map(x=>{
-      return x.nearby_restaurants}))
+   let geoCode= this._http.get(`${this.mainUrl}geocode?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`, {headers});
    return geoCode;
     }
-    getLocalDetails(location){
-    return this._http.get<locationDetails>(`${this.mainUrl}locations?query=${location}`,{headers}).pipe(map(x=>{return x }))
-    }
-    getLocationDetails(entity_id,entity_type){
-     return this._http.get<nearby_restaurants>(`${this.mainUrl}location_details?entity_id=${entity_id}&entity_type=${entity_type}`,{headers}).pipe(map(x=>{return x}))
-    }
-    getCollectionDetails(cityId){
-      return this._http.get(this.mainUrl+'collections?city_id='+cityId,{headers}).pipe(map(x=>{return x}));
-    }
     
-    getRestaurantsInTrend(cityId,collectionId){
-   return this._http.get(this.mainUrl+'search?entity_id='+cityId+'&entity_type=zonecity&collection_id='+collectionId,{headers}).pipe(map(x=>{return x}))
-    }
+  getCityId(id) {
+    let responseCityID = this._http.get(this.mainUrl + "cities?q=" + id, {headers});
+    return responseCityID;
+  }
+  getCollectionDetails(cityId){
+    let CollectionDetails = this._http.get(this.mainUrl+'collections?city_id='+cityId,{headers});
+    return CollectionDetails;
+  }
+  
+  getCategoriesDetails() {
+    let categoryDetails = this._http.get(this.mainUrl + "categories", {headers});
+    return categoryDetails;
+  }
+  getEstablishmentsDetails(cityId) {
+    let establishmentDetails = this._http.get(this.mainUrl + "establishments?city_id=" + cityId, {headers});
+    return establishmentDetails;
+  }
+
+  getListofRestaurants(cityId) {
+    let restaurants = this._http.get(this.mainUrl + "search?entity_id=" + cityId + "&count=1000", {headers});
+    return restaurants;
+  }
+
+  getTrendingRestaurants(cityId, collectionId) {
+    let response = this._http.get(this.mainUrl + "search?entity_id=" + cityId + "&entity_type=city&collection_id=" + collectionId, {headers});
+    return response;
+  }
+
+  getRestaurantDetails(restoId) {
+    let RestaurantDetails = this._http.get(this.mainUrl + "restaurant?res_id=" + restoId, {headers});
+    console.log(RestaurantDetails);
+    return RestaurantDetails;
+  }
+
+  getReviews(restoId) {
+    let reviews = this._http.get(this.mainUrl + "reviews?res_id=" + restoId, {headers});
+    return reviews;
+  }
 }

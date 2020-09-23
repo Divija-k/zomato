@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import{ Routes, RouterModule} from '@angular/router';
 import{LocationService} from './location.service';
+import { NgSelectModule } from '@ng-select/ng-select'
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -10,6 +11,8 @@ import { ErrorComponent } from './error/error.component';
 import {HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RestaurantComponent } from './restaurant/restaurant.component';
+import { ReviewsComponent } from './reviews/reviews.component';
+import { componentFactoryName } from '@angular/compiler';
 
 
 @NgModule({
@@ -18,18 +21,21 @@ import { RestaurantComponent } from './restaurant/restaurant.component';
     HomeComponent,
     DetailsComponent,
     ErrorComponent,
-    RestaurantComponent
+    RestaurantComponent,
+    ReviewsComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     RouterModule.forRoot([
-      {path:'home', component:HomeComponent},
       {path:'',redirectTo:'home',pathMatch:'full'},
-      {path:'details',component:DetailsComponent},
+      {path:'home', component:HomeComponent},
+      {path:'details/:id',component:DetailsComponent},
+      {path:'restaurant/:id', component:RestaurantComponent},
       {path:'**', component:ErrorComponent}
     ]),
-    HttpClientModule
+    HttpClientModule,
+    NgSelectModule
   ],
   providers: [LocationService],
   bootstrap: [AppComponent]

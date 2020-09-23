@@ -8,63 +8,94 @@ import{ Router, ActivatedRoute} from '@angular/router';
   styleUrls: ['./details.component.css']
 })
 export class DetailsComponent implements OnInit {
-  cityName: string;
-  cityId: string;
+  
+  title = 'Food-e-Delicious';
+  cityName: string = "";
+  cityIdDetail: any;
   collection: any;
-  collectionId: any;
+  categoriesDetail:any;
+  establishment: any;
   restaurantList: any;
-  searchRestaurantList: any;
+  selectedCityName: string = "";
+  cities: any;
+  collectionId: number;
+  loading: boolean = false;
+  searchRestoList: any = [];
+  selectedRestoName: string = "";
 
-  constructor(private route: ActivatedRoute,private _http: LocationService,private router:Router) { }
+  constructor(private _http: LocationService,
+    private route: ActivatedRoute,
+    private router: Router) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.cities = this._http.cities;
     this.getAllDetails();
   }
-  //Guided from search page to in detail page
-  async goToDetails(e, cityName, cityid) {
-    await this.router.navigate(['/details', cityName, cityid]);
+
+  async goToDetails(e, cityName) {
+    await this.router.navigate(['/details', cityName]);
     this.getAllDetails();
   }
-  //takes values from route parameters
-  public getAllDetails(){
-    this.cityName = this.route.snapshot.paramMap.get('cityname').toString();
-    this.cityId = this.route.snapshot.paramMap.get('cityid');
-    this.getcollectionDetails(this.cityId)
+
+  goToRestaurant(e, restoName) {
+    if(restoName === "" || restoName === undefined) {
+      this.router.navigate(['**']);
+    } else {
+    this.router.navigate(['/restaurant', restoName]);
+    }
   }
-//gets all detailed collections in a city
-  public getcollectionDetails(cityId) {
+
+  async getAllDetails() {
+    this.loading = true;
+    const id = this.route.snapshot.paramMap.get('id').toString();
+    this.cityName = id;
+    this.selectedCityName = this.cityName;
+    await this._http.getCityId(id).subscribe(
+      async data => {
+        for(let key in data) {
+          if (key == "location_suggestions") {
+            this.cityIdDetail = await data[key][0].id;
+            this.getcollectionDetails(this.cityIdDetail);
+          }
+        }
+      }
+    )
+    await this.getCategoriesDetails();
+  }
+  
+  getcollectionDetails(cityId) {
     this._http.getCollectionDetails(cityId).subscribe(
-      res => {
-        this.collection = res;
+      data => {
+        this.collection = data;
+        this.collection = this.collection.collections;
         for(let i of this.collection) {
           if(i.collection.title == "Trending This Week") {
             this.collection = i.collection;
             this.collectionId = i.collection.collection_id;
           }
         }
-        this.getRestaurantsInTrend(this.cityId, this.collectionId);
+        this.getTrendingRestaurant(this.cityIdDetail, this.collectionId);
       }
     )
-  }
-  //Dislaying the restaurants in trend
-  public getRestaurantsInTrend(cityId,collectionId) {
-    this._http.getRestaurantsInTrend(cityId,collectionId).subscribe(
-      (res)=>{
-        this.restaurantList = res;
-        this.restaurantList = Array.from(this.restaurantList.restaurants);
-        console.log(this.restaurantList);
-        this.searchRestaurantList = this.restaurantList;
-      }
-    )
-       
-  }
-//Takes to one single restaurant page
-  goToRestaurant(e, restaurantName) {
-    if(restaurantName === "" || restaurantName === undefined) {
-      this.router.navigate(['**']);
-    } else {
-    this.router.navigate(['/restaurant', restaurantName]);
-    }
   }
 
+  getCategoriesDetails() {
+    this._http.getCategoriesDetails().subscribe(
+      data => {
+        this.categoriesDetail = data;
+        this.categoriesDetail = this.categoriesDetail.categories;
+      }
+    )
+  }
+
+  getTrendingRestaurant(cityId, collectionId) {
+    this._http.getTrendingRestaurants(cityId, collectionId).subscribe(
+      data => {
+        this.restaurantList = data;
+        this.restaurantList = Array.from(this.restaurantList.restaurants);
+        this.searchRestoList = this.restaurantList;
+        
+      }
+    )
+  }
 }

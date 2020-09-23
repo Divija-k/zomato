@@ -7,16 +7,22 @@
 </div>
 <br>
   <div class="container" style="text-align: center;">
-      <h2 class="text-center mx-auto" >ENTER YOUR LOCATION DOWN HERE</h2>
+      <h2 class="text-center mx-auto">ENTER YOUR LOCATION DOWN HERE</h2>
   </div><br>
     <div class="row mx-auto" style="text-align: center;">
         <div class="col-6 mx-auto">
-          <form #locationsearchform="ngForm" (ngSubmit)="getLocalDetails(user_location)">
-            <div class="form-group">
-            <input type="text" class="form-control" placeholder="Enter your location" name="user_location" [(ngModel)]="user_location" required>
-          </div>
-          <button type="submit" class="btn btn-danger" [disabled]="!locationsearchform.form.valid" [routerLink]="['/details']">SEARCH</button>
-        </form>
+            <div class="input-group">
+                <ng-select [items]="cities" bindLabel="name" bindValue="name" id="search" class="form-control spacing"
+                placeholder="Select city" [clearable]="true" [(ngModel)]="chosenCityName" [closeOnSelect]="true"
+                dropdownPosition="auto">
+              </ng-select>&nbsp;
+              <span class="input-group-btn">
+                <input type="button" name="commit" value="Search" class="btn btn-danger space" data-disable-with="Search"
+                  (click)="goToDetails($event, chosenCityName)">
+              </span>
+            </div>
+    
         </div>
       </div>
+      
 <router-outlet></router-outlet>

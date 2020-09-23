@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LocationService } from '../location.service';
-import{Router} from '@angular/router';
+import{ActivatedRoute, Router} from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,17 +9,15 @@ import{Router} from '@angular/router';
 export class HomeComponent implements OnInit {
  public lat: number;
  public lon: number;
- public user_location: string;
- public entityId: number;
- public entityType: string;
-  bestRestaurants: any[];
-  locationDetails: import("c:/PROJECT ZOMATO/zomato-frontend/src/app/Interfaces").nearby_restaurants;
-  cityName: string;
-  cityId: number;
+ public places: any;
+ public chosenCityName: string = "";
+ public cityName: string = "";
+  cities: any;
 
   constructor(private _http: LocationService, private router: Router) { }
   ngOnInit(): void {
-   
+    this.cities = this._http.cities;
+  
     //TO GET LATITUDE & LONGITUDE 
     if('geolocation' in navigator){
       navigator.geolocation.getCurrentPosition((position) => {
@@ -28,7 +26,7 @@ export class HomeComponent implements OnInit {
       })
     }
     else{
-      console.log("unable to retrieve geolocation")
+      console.log("unable to retrieve geolocation");
         } 
     }
     getPosition(position: Position) {
@@ -38,23 +36,9 @@ export class HomeComponent implements OnInit {
     
   }
 
-
-//TO GET ENTITY ID & ENTITY TYPE FROM LOCATION API.
-  public getLocalDetails(location):any{
-    this._http.getLocalDetails(location).subscribe(
-      (res)=> {
-        this.entityId=res.entity_id;
-        this.entityType= res.entity_type;
-        this.cityName = res.city_name;
-        this.cityId = res.city_id;
-        console.log(res)
-            this.router.navigate(['/details', this.cityName, this.cityId]); //TO REDIRECT TO A PAGE WITH ALL TRENDINGS, CATEGORIES< ESTABLISHMENTS IN A CITY
-      },
-      (err)=> {
-         return this.router.navigate(['**']);;
-      },
-      )
-
-    }
-
+  goToDetails(e, cityName) {
+    this.router.navigate(['/details', cityName]);
   }
+  
+  
+}
