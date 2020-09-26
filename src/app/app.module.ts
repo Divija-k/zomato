@@ -11,7 +11,7 @@ import { ErrorComponent } from './error/error.component';
 import {HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RestaurantComponent } from './restaurant/restaurant.component';
-import { ReviewsComponent } from './reviews/reviews.component';
+
 import { componentFactoryName } from '@angular/compiler';
 
 
@@ -21,8 +21,7 @@ import { componentFactoryName } from '@angular/compiler';
     HomeComponent,
     DetailsComponent,
     ErrorComponent,
-    RestaurantComponent,
-    ReviewsComponent
+    RestaurantComponent
   ],
   imports: [
     BrowserModule,
